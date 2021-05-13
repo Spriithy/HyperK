@@ -22,8 +22,11 @@ type (
 	HINSTANCE     HANDLE
 	HHOOK         HANDLE
 	HWND          HANDLE
+	HKL           HANDLE
+	LPDWORD       uintptr
 	LPCSTR        *uint8
 	LPCWSTR       *uint16
+	PBYTE         *byte
 )
 
 type HOOKPROC func(int, WPARAM, LPARAM) LRESULT
