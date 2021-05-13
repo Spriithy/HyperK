@@ -3,7 +3,7 @@ package user32
 import (
 	"unsafe"
 
-	"github.com/Spriithy/gkl/wintypes"
+	"github.com/Spriithy/gkl/types"
 )
 
 var (
@@ -12,26 +12,26 @@ var (
 	dispatchMessage  = user32DLL.NewProc("DispatchMessage")
 )
 
-func GetMessageW(lpMsg *wintypes.MSG, hWnd wintypes.HWND, wMsgFilterMin, wMsgFilterMax wintypes.UINT) wintypes.BOOL {
+func GetMessageW(lpMsg *types.MSG, hWnd types.HWND, wMsgFilterMin, wMsgFilterMax types.UINT) types.BOOL {
 	ret, _, _ := getMessageW.Call(
 		uintptr(unsafe.Pointer(lpMsg)),
 		uintptr(hWnd),
 		uintptr(wMsgFilterMin),
 		uintptr(wMsgFilterMax),
 	)
-	return wintypes.BOOL(ret)
+	return types.BOOL(ret)
 }
 
-func TranslateMessage(lpMsg *wintypes.MSG) wintypes.BOOL {
+func TranslateMessage(lpMsg *types.MSG) types.BOOL {
 	ret, _, _ := translateMessage.Call(
 		uintptr(unsafe.Pointer(lpMsg)),
 	)
-	return wintypes.BOOL(ret)
+	return types.BOOL(ret)
 }
 
-func DispatchMessage(lpMsg *wintypes.MSG) wintypes.LRESULT {
+func DispatchMessage(lpMsg *types.MSG) types.LRESULT {
 	ret, _, _ := dispatchMessage.Call(
 		uintptr(unsafe.Pointer(lpMsg)),
 	)
-	return wintypes.LRESULT(ret)
+	return types.LRESULT(ret)
 }

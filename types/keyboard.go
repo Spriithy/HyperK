@@ -1,4 +1,4 @@
-package wintypes
+package types
 
 const (
 	WH_KEYBOARD_LL = 13

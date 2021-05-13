@@ -13,7 +13,7 @@ func main() {
 	go kl.Decoder.Listen()
 	go func() {
 		for keystroke := range keystrokes {
-			fmt.Println(keystroke)
+			fmt.Print(keystroke)
 		}
 	}()
 

@@ -1,4 +1,4 @@
-package wintypes
+package types
 
 type POINT struct {
 	X LONG

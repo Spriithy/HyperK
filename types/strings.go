@@ -1,4 +1,4 @@
-package wintypes
+package types
 
 import "unicode/utf16"
 
