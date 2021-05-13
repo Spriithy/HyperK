@@ -89,3 +89,7 @@ func (ke *KeyboardEvent) IsEscape() bool {
 func (ke *KeyboardEvent) IsTab() bool {
 	return ke.IsVk(types.VK_TAB)
 }
+
+func (ke *KeyboardEvent) IsNumLock() bool {
+	return ke.IsVk(types.VK_NUMLOCK)
+}

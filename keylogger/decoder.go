@@ -98,6 +98,9 @@ func (ksd *KeyStrokeDecoder) Listen() {
 		case event.IsCaps() && event.IsDown():
 			ksd.capsState = !ksd.capsState
 
+		case event.IsNumLock() && event.IsDown():
+			ksd.output <- "(NUMLOCK)"
+
 		case event.IsTab() && event.IsKeyDown():
 			ksd.output <- "(TAB)"
 
