@@ -8,7 +8,7 @@ import (
 
 var (
 	getForegroundWindow      = user32DLL.NewProc("GetForegroundWindow")
-	getWindowTextA           = user32DLL.NewProc("GetWindowTextA")
+	getWindowTextW           = user32DLL.NewProc("GetWindowTextW")
 	getWindowThreadProcessId = user32DLL.NewProc("GetWindowThreadProcessId")
 )
 
@@ -17,8 +17,8 @@ func GetForegroundWindow() types.HWND {
 	return types.HWND(ret)
 }
 
-func GetWindowTextA(hWnd types.HWND, buf types.LPCSTR, maxCount int) int {
-	ret, _, _ := getWindowTextA.Call(
+func GetWindowTextW(hWnd types.HWND, buf types.LPCWSTR, maxCount int) int {
+	ret, _, _ := getWindowTextW.Call(
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(buf)),
 		uintptr(maxCount),

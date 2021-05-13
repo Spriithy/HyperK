@@ -75,9 +75,17 @@ func (ke *KeyboardEvent) IsBackspace() bool {
 }
 
 func (ke *KeyboardEvent) IsControl() bool {
-	return ke.IsVk(types.VK_CONTROL)
+	return ke.IsVk(types.VK_CONTROL) || ke.IsVk(types.VK_LCONTROL) || ke.IsVk(types.VK_RCONTROL)
+}
+
+func (ke *KeyboardEvent) IsMenu() bool {
+	return ke.IsVk(types.VK_MENU) || ke.IsVk(types.VK_LMENU) || ke.IsVk(types.VK_RMENU)
 }
 
 func (ke *KeyboardEvent) IsEscape() bool {
 	return ke.IsVk(types.VK_ESCAPE)
+}
+
+func (ke *KeyboardEvent) IsTab() bool {
+	return ke.IsVk(types.VK_TAB)
 }

