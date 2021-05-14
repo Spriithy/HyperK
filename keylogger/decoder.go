@@ -8,13 +8,6 @@ import (
 	"github.com/Spriithy/gkl/user32"
 )
 
-var whKeyStateNames = map[types.WPARAM]string{
-	types.WM_KEYUP:      "KeyUp",
-	types.WM_KEYDOWN:    "KeyDown",
-	types.WM_SYSKEYUP:   "SysKeyUp",
-	types.WM_SYSKEYDOWN: "SysKeyDown",
-}
-
 type KeyStrokeDecoder struct {
 	input         chan *KeyboardEvent
 	output        chan string
@@ -35,7 +28,6 @@ func NewKeyStrokeDecoder(input chan *KeyboardEvent, output chan string) *KeyStro
 func (ksd *KeyStrokeDecoder) Listen() {
 	for {
 		event := <-ksd.input
-		// kbd := event.HookStruct
 
 		user32.GetKeyboardState(types.PBYTE(&ksd.keyboardState[0]))
 
@@ -73,7 +65,6 @@ func (ksd *KeyStrokeDecoder) Listen() {
 		) <= 0
 
 		key := syscall.UTF16ToString(buf[:])
-		// key := rune(user32.MapVirtualKeyExW(types.UINT(event.HookStruct.VkCode), types.MAPVK_VK_TO_CHAR, event.Layout))
 
 		switch {
 		case event.IsControl() && event.IsDown():

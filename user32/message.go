@@ -7,9 +7,7 @@ import (
 )
 
 var (
-	getMessageW      = user32DLL.NewProc("GetMessageW")
-	translateMessage = user32DLL.NewProc("TranslateMessage")
-	dispatchMessage  = user32DLL.NewProc("DispatchMessage")
+	getMessageW = user32DLL.NewProc("GetMessageW")
 )
 
 func GetMessageW(lpMsg *types.MSG, hWnd types.HWND, wMsgFilterMin, wMsgFilterMax types.UINT) types.BOOL {
@@ -20,18 +18,4 @@ func GetMessageW(lpMsg *types.MSG, hWnd types.HWND, wMsgFilterMin, wMsgFilterMax
 		uintptr(wMsgFilterMax),
 	)
 	return types.BOOL(ret)
-}
-
-func TranslateMessage(lpMsg *types.MSG) types.BOOL {
-	ret, _, _ := translateMessage.Call(
-		uintptr(unsafe.Pointer(lpMsg)),
-	)
-	return types.BOOL(ret)
-}
-
-func DispatchMessage(lpMsg *types.MSG) types.LRESULT {
-	ret, _, _ := dispatchMessage.Call(
-		uintptr(unsafe.Pointer(lpMsg)),
-	)
-	return types.LRESULT(ret)
 }

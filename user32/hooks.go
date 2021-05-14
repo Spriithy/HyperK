@@ -7,20 +7,9 @@ import (
 )
 
 var (
-	setWindowsHookExA = user32DLL.NewProc("SetWindowsHookExA")
 	setWindowsHookExW = user32DLL.NewProc("SetWindowsHookExW")
 	callNextHookEx    = user32DLL.NewProc("CallNextHookEx")
 )
-
-func SetWindowsHookExA(idHook int, lpfn types.HOOKPROC, hMod types.HINSTANCE, dwThreadId types.DWORD) types.HHOOK {
-	ret, _, _ := setWindowsHookExA.Call(
-		uintptr(idHook),
-		uintptr(syscall.NewCallback(lpfn)),
-		uintptr(hMod),
-		uintptr(dwThreadId),
-	)
-	return types.HHOOK(ret)
-}
 
 func SetWindowsHookExW(idHook int, lpfn types.HOOKPROC, hMod types.HINSTANCE, dwThreadId types.DWORD) types.HHOOK {
 	ret, _, _ := setWindowsHookExW.Call(

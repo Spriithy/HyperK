@@ -5,8 +5,6 @@ type POINT struct {
 	Y LONG
 }
 
-type PPOINT = POINT
-
 type MSG struct {
 	Hwnd    HWND
 	Message UINT
@@ -15,7 +13,3 @@ type MSG struct {
 	Time    DWORD
 	Pt      POINT
 }
-
-type PMSG = *MSG
-type NPMSG = *MSG
-type LPMSG = *MSG
