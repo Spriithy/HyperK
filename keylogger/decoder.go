@@ -8,7 +8,7 @@ import (
 	"github.com/Spriithy/gkl/user32"
 )
 
-type KeyStrokeDecoder struct {
+type keyStrokeDecoder struct {
 	input         chan *KeyboardEvent
 	output        chan string
 	shiftState    bool
@@ -18,14 +18,14 @@ type KeyStrokeDecoder struct {
 	keyboardState [256]uint8
 }
 
-func NewKeyStrokeDecoder(input chan *KeyboardEvent, output chan string) *KeyStrokeDecoder {
-	return &KeyStrokeDecoder{
+func newKeyStrokeDecoder(input chan *KeyboardEvent, output chan string) *keyStrokeDecoder {
+	return &keyStrokeDecoder{
 		input:  input,
 		output: output,
 	}
 }
 
-func (ksd *KeyStrokeDecoder) Listen() {
+func (ksd *keyStrokeDecoder) Listen() {
 	for {
 		event := <-ksd.input
 
@@ -67,35 +67,35 @@ func (ksd *KeyStrokeDecoder) Listen() {
 		key := syscall.UTF16ToString(buf[:])
 
 		switch {
-		case event.IsControl() && event.IsDown():
+		case event.isControl() && event.isDown():
 			ksd.ctrlState = true
-			ksd.output <- "(CTRL)"
+			// ksd.output <- "(CTRL)"
 
-		case event.IsControl() && event.IsUp():
+		case event.isControl() && event.isUp():
 			ksd.ctrlState = false
 
-		case event.IsShift() && event.IsDown():
+		case event.isShift() && event.isDown():
 			ksd.shiftState = true
 
-		case event.IsShift() && event.IsUp():
+		case event.isShift() && event.isUp():
 			ksd.shiftState = false
 
-		case event.IsMenu() && event.IsDown():
+		case event.isMenu() && event.isDown():
 			ksd.menuState = true
 
-		case event.IsMenu() && event.IsUp():
+		case event.isMenu() && event.isUp():
 			ksd.menuState = false
 
-		case event.IsCaps() && event.IsDown():
+		case event.isCaps() && event.isDown():
 			ksd.capsState = !ksd.capsState
 
-		case event.IsNumLock() && event.IsDown():
+		case event.isNumLock() && event.isDown():
 			ksd.output <- "(NUMLOCK)"
 
-		case event.IsTab() && event.IsKeyDown():
+		case event.isTab() && event.isDown():
 			ksd.output <- "(TAB)"
 
-		case event.IsTab() && event.IsSysKeyDown():
+		case event.isTab() && event.isSysKeyDown():
 			/*
 				if ksd.shiftState {
 					ksd.output <- "(ALT+SHIFT+TAB)"
@@ -104,19 +104,18 @@ func (ksd *KeyStrokeDecoder) Listen() {
 				}
 			*/
 
-		case event.IsEscape() && event.IsDown():
-			ksd.output <- "(ESC)"
+		case event.isEscape() && event.isDown():
+			// ksd.output <- "(ESC)"
 
-		case event.IsBackspace() && event.IsDown():
+		case event.isBackspace() && event.isDown():
 			ksd.output <- "(BACKSPACE)"
 
-		case event.IsReturn() && event.IsDown():
+		case event.isReturn() && event.isDown():
 			ksd.output <- "↩\n"
 		}
 
-		if !unicodeErr && unicode.IsPrint(rune(key[0])) && event.IsDown() {
+		if !unicodeErr && unicode.IsPrint(rune(key[0])) && event.isDown() {
 			ksd.output <- key
 		}
-
 	}
 }

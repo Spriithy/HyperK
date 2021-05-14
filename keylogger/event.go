@@ -13,7 +13,7 @@ type KeyboardEvent struct {
 	HookStruct *types.KBDLLHOOKSTRUCT
 }
 
-func NewKeyboardEvent(wParam types.WPARAM, lParam types.LPARAM, layout types.HKL) *KeyboardEvent {
+func newKeyboardEvent(wParam types.WPARAM, lParam types.LPARAM, layout types.HKL) *KeyboardEvent {
 	return &KeyboardEvent{
 		WParam:     wParam,
 		LParam:     lParam,
@@ -22,74 +22,74 @@ func NewKeyboardEvent(wParam types.WPARAM, lParam types.LPARAM, layout types.HKL
 	}
 }
 
-func (ke *KeyboardEvent) IsUp() bool {
-	return ke.IsKeyUp() || ke.IsSysKeyUp()
+func (ke *KeyboardEvent) isUp() bool {
+	return ke.isKeyUp() || ke.isSysKeyUp()
 }
 
-func (ke *KeyboardEvent) IsDown() bool {
-	return ke.IsKeyDown() || ke.IsSysKeyDown()
+func (ke *KeyboardEvent) isDown() bool {
+	return ke.isKeyDown() || ke.isSysKeyDown()
 }
 
-func (ke *KeyboardEvent) IsKeyUp() bool {
+func (ke *KeyboardEvent) isKeyUp() bool {
 	return ke.WParam == types.WM_KEYUP
 }
 
-func (ke *KeyboardEvent) IsKeyDown() bool {
+func (ke *KeyboardEvent) isKeyDown() bool {
 	return ke.WParam == types.WM_KEYDOWN
 }
 
-func (ke *KeyboardEvent) IsSysKeyUp() bool {
+func (ke *KeyboardEvent) isSysKeyUp() bool {
 	return ke.WParam == types.WM_SYSKEYUP
 }
 
-func (ke *KeyboardEvent) IsSysKeyDown() bool {
+func (ke *KeyboardEvent) isSysKeyDown() bool {
 	return ke.WParam == types.WM_SYSKEYDOWN
 }
 
-func (ke *KeyboardEvent) IsMode(mode types.WPARAM) bool {
+func (ke *KeyboardEvent) isMode(mode types.WPARAM) bool {
 	return ke.WParam == mode
 }
 
-func (ke *KeyboardEvent) IsVk(vkCode types.DWORD) bool {
+func (ke *KeyboardEvent) isVk(vkCode types.DWORD) bool {
 	return ke.HookStruct.VkCode == vkCode
 }
 
-func (ke *KeyboardEvent) IsVkMode(vkCode types.DWORD, mode types.WPARAM) bool {
-	return ke.IsMode(mode) && ke.IsVk(vkCode)
+func (ke *KeyboardEvent) isVkMode(vkCode types.DWORD, mode types.WPARAM) bool {
+	return ke.isMode(mode) && ke.isVk(vkCode)
 }
 
-func (ke *KeyboardEvent) IsShift() bool {
-	return ke.IsVk(types.VK_SHIFT) || ke.IsVk(types.VK_LSHIFT) || ke.IsVk(types.VK_RSHIFT)
+func (ke *KeyboardEvent) isShift() bool {
+	return ke.isVk(types.VK_SHIFT) || ke.isVk(types.VK_LSHIFT) || ke.isVk(types.VK_RSHIFT)
 }
 
-func (ke *KeyboardEvent) IsCaps() bool {
-	return ke.IsVk(types.VK_CAPITAL)
+func (ke *KeyboardEvent) isCaps() bool {
+	return ke.isVk(types.VK_CAPITAL)
 }
 
-func (ke *KeyboardEvent) IsReturn() bool {
-	return ke.IsVk(types.VK_RETURN)
+func (ke *KeyboardEvent) isReturn() bool {
+	return ke.isVk(types.VK_RETURN)
 }
 
-func (ke *KeyboardEvent) IsBackspace() bool {
-	return ke.IsVk(types.VK_BACK)
+func (ke *KeyboardEvent) isBackspace() bool {
+	return ke.isVk(types.VK_BACK)
 }
 
-func (ke *KeyboardEvent) IsControl() bool {
-	return ke.IsVk(types.VK_CONTROL) || ke.IsVk(types.VK_LCONTROL) || ke.IsVk(types.VK_RCONTROL)
+func (ke *KeyboardEvent) isControl() bool {
+	return ke.isVk(types.VK_CONTROL) || ke.isVk(types.VK_LCONTROL) || ke.isVk(types.VK_RCONTROL)
 }
 
-func (ke *KeyboardEvent) IsMenu() bool {
-	return ke.IsVk(types.VK_MENU) || ke.IsVk(types.VK_LMENU) || ke.IsVk(types.VK_RMENU)
+func (ke *KeyboardEvent) isMenu() bool {
+	return ke.isVk(types.VK_MENU) || ke.isVk(types.VK_LMENU) || ke.isVk(types.VK_RMENU)
 }
 
-func (ke *KeyboardEvent) IsEscape() bool {
-	return ke.IsVk(types.VK_ESCAPE)
+func (ke *KeyboardEvent) isEscape() bool {
+	return ke.isVk(types.VK_ESCAPE)
 }
 
-func (ke *KeyboardEvent) IsTab() bool {
-	return ke.IsVk(types.VK_TAB)
+func (ke *KeyboardEvent) isTab() bool {
+	return ke.isVk(types.VK_TAB)
 }
 
-func (ke *KeyboardEvent) IsNumLock() bool {
-	return ke.IsVk(types.VK_NUMLOCK)
+func (ke *KeyboardEvent) isNumLock() bool {
+	return ke.isVk(types.VK_NUMLOCK)
 }

