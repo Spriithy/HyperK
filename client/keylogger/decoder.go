@@ -4,8 +4,8 @@ import (
 	"syscall"
 	"unicode"
 
-	"github.com/Spriithy/gkl/types"
-	"github.com/Spriithy/gkl/user32"
+	"github.com/Spriithy/gkl/client/types"
+	"github.com/Spriithy/gkl/client/user32"
 )
 
 type keyStrokeDecoder struct {

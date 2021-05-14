@@ -3,7 +3,7 @@ package user32
 import (
 	"syscall"
 
-	"github.com/Spriithy/gkl/types"
+	"github.com/Spriithy/gkl/client/types"
 )
 
 var (

@@ -3,7 +3,7 @@ package keylogger
 import (
 	"unsafe"
 
-	"github.com/Spriithy/gkl/types"
+	"github.com/Spriithy/gkl/client/types"
 )
 
 type KeyboardEvent struct {

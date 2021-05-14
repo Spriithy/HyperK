@@ -3,7 +3,7 @@ package user32
 import (
 	"unsafe"
 
-	"github.com/Spriithy/gkl/types"
+	"github.com/Spriithy/gkl/client/types"
 )
 
 var (

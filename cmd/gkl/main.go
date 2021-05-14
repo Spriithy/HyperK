@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Spriithy/gkl/keylogger"
+	"github.com/Spriithy/gkl/client/keylogger"
 )
 
 func main() {
