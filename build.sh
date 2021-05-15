@@ -13,9 +13,9 @@ else
     mv client.exe ${CLIENT_EXE}
 fi
 
-set GOOS=linux
+set GOOS=windows
 set GOARCH=amd64
-SERVER_EXE=HyperK-server
+SERVER_EXE=HyperK-server.exe
 echo "[+] Building ${SERVER_EXE}..."
 go build -o ${SERVER_EXE} ./cmd/server
 

