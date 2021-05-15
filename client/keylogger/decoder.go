@@ -4,8 +4,7 @@ import (
 	"syscall"
 	"unicode"
 
-	"github.com/Spriithy/gkl/client/types"
-	"github.com/Spriithy/gkl/client/user32"
+	"github.com/Spriithy/gkl/client/windows"
 )
 
 type keyStrokeDecoder struct {
@@ -29,38 +28,38 @@ func (ksd *keyStrokeDecoder) Listen() {
 	for {
 		event := <-ksd.input
 
-		user32.GetKeyboardState(types.PBYTE(&ksd.keyboardState[0]))
+		windows.GetKeyboardState(windows.PBYTE(&ksd.keyboardState[0]))
 
 		/*
 			for i := range ksd.keyboardState {
-				ksd.keyboardState[i] = byte((user32.GetAsyncKeyState(i) >> 8) & 0xff)
+				ksd.keyboardState[i] = byte((windows.GetAsyncKeyState(i) >> 8) & 0xff)
 			}
 		*/
 
 		if ksd.shiftState {
-			ksd.keyboardState[types.VK_SHIFT] = 0x80
+			ksd.keyboardState[windows.VK_SHIFT] = 0x80
 		}
 
 		if ksd.menuState {
-			ksd.keyboardState[types.VK_MENU] = 0x80
+			ksd.keyboardState[windows.VK_MENU] = 0x80
 		}
 
 		if ksd.ctrlState {
-			ksd.keyboardState[types.VK_CONTROL] = 0x80
+			ksd.keyboardState[windows.VK_CONTROL] = 0x80
 		}
 
 		if ksd.capsState {
-			ksd.keyboardState[types.VK_CAPITAL] = 0x01
+			ksd.keyboardState[windows.VK_CAPITAL] = 0x01
 		}
 
 		var buf [4]uint16
-		unicodeErr := user32.ToUnicodeEx(
-			types.UINT(event.HookStruct.VkCode),
-			types.UINT(event.HookStruct.ScanCode),
-			types.PBYTE(&ksd.keyboardState[0]),
-			types.LPCWSTR(&buf[0]),
+		unicodeErr := windows.ToUnicodeEx(
+			windows.UINT(event.HookStruct.VkCode),
+			windows.UINT(event.HookStruct.ScanCode),
+			windows.PBYTE(&ksd.keyboardState[0]),
+			windows.LPCWSTR(&buf[0]),
 			cap(buf),
-			types.UINT(event.HookStruct.Flags),
+			windows.UINT(event.HookStruct.Flags),
 			event.Layout,
 		) <= 0
 

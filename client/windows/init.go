@@ -1,4 +1,4 @@
-package user32
+package windows
 
 import "syscall"
 

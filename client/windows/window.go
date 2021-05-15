@@ -1,10 +1,22 @@
-package user32
+package windows
 
 import (
 	"unsafe"
-
-	"github.com/Spriithy/gkl/client/types"
 )
+
+type POINT struct {
+	X LONG
+	Y LONG
+}
+
+type MSG struct {
+	Hwnd    HWND
+	Message UINT
+	WParam  WPARAM
+	LParam  LPARAM
+	Time    DWORD
+	Pt      POINT
+}
 
 var (
 	getForegroundWindow      = user32DLL.NewProc("GetForegroundWindow")
@@ -12,12 +24,12 @@ var (
 	getWindowThreadProcessId = user32DLL.NewProc("GetWindowThreadProcessId")
 )
 
-func GetForegroundWindow() types.HWND {
+func GetForegroundWindow() HWND {
 	ret, _, _ := getForegroundWindow.Call()
-	return types.HWND(ret)
+	return HWND(ret)
 }
 
-func GetWindowTextW(hWnd types.HWND, buf types.LPCWSTR, maxCount int) int {
+func GetWindowTextW(hWnd HWND, buf LPCWSTR, maxCount int) int {
 	ret, _, _ := getWindowTextW.Call(
 		uintptr(hWnd),
 		uintptr(unsafe.Pointer(buf)),
@@ -26,10 +38,10 @@ func GetWindowTextW(hWnd types.HWND, buf types.LPCWSTR, maxCount int) int {
 	return int(ret)
 }
 
-func GetWindowThreadProcessId(hWnd types.HWND, lpdwProcessId types.LPDWORD) types.HWND {
+func GetWindowThreadProcessId(hWnd HWND, lpdwProcessId LPDWORD) HWND {
 	ret, _, _ := getWindowThreadProcessId.Call(
 		uintptr(hWnd),
 		uintptr(lpdwProcessId),
 	)
-	return types.HWND(ret)
+	return HWND(ret)
 }

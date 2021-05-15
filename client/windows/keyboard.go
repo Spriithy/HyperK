@@ -1,4 +1,39 @@
-package types
+package windows
+
+import (
+	"unsafe"
+)
+
+var (
+	getKeyboardLayout = user32DLL.NewProc("GetKeyboardLayout")
+	getKeyboardState  = user32DLL.NewProc("GetKeyboardState")
+	toUnicodeEx       = user32DLL.NewProc("ToUnicodeEx")
+)
+
+func GetKeyboardLayout(hWnd HWND) HKL {
+	ret, _, _ := getKeyboardLayout.Call(uintptr(hWnd))
+	return HKL(ret)
+}
+
+func GetKeyboardState(lbKeyState PBYTE) BOOL {
+	ret, _, _ := getKeyboardState.Call(
+		uintptr(unsafe.Pointer(lbKeyState)),
+	)
+	return BOOL(ret)
+}
+
+func ToUnicodeEx(vkCode, scanCode UINT, lpKeyState PBYTE, pwsqzBuff LPCWSTR, cchBuff int, wFlags UINT, hkl HKL) int {
+	ret, _, _ := toUnicodeEx.Call(
+		uintptr(vkCode),
+		uintptr(scanCode),
+		uintptr(unsafe.Pointer(lpKeyState)),
+		uintptr(unsafe.Pointer(pwsqzBuff)),
+		uintptr(cchBuff),
+		uintptr(wFlags),
+		uintptr(hkl),
+	)
+	return int(ret)
+}
 
 const (
 	WH_KEYBOARD_LL = 13

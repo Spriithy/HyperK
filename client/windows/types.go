@@ -1,4 +1,4 @@
-package types
+package windows
 
 type (
 	BOOL          uint32

